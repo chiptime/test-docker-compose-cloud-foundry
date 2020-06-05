@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  api:
+    container_name: 'api'
+    build: '.'
+    ports:
+      - '4004:4004'
+    volumes:
+      - './:/app'
+    #security_opt:
+      # - seccomp:unconfined
+    #entrypoint: dlv exec /app/main -l 0.0.0.0:8080 --headless=true --log=true -- server
+    tty: true
