@@ -3,7 +3,7 @@ node {
     def newApp
     def registry = 'docker-registry.cfapps.us10.hana.ondemand.com/test-cf'
     def registryCredential = 'dockerhub'
-	
+
 	stage('Git') {
 		git 'https://github.com/chiptime/test-docker-compose-cloud-foundry'
 	}
@@ -23,14 +23,9 @@ node {
         sh "docker rmi $registry:latest"
     }
     
-    stage('Deploy to Cloud Foundry') {
-        pushToCloudFoundry(
-            target: 'https://api.cf.us10.hana.ondemand.com',
-            organization: 'e9ae66datrial',
-            cloudSpace: 'dev',
-            credentialsId: 'cf-trial-patrick',
-            manifestChoice: [manifestFile: 'path/to/manifest.yml']
-        )
+    stage ('Dev_Deployment') {
+        sh 'pwd'
+        sh 'cf login -a $CF_API_ENDPOINT -u $CF_CREDENTIALS_USER -p $CF_CREDENTIALS_PASSWORD'
+        sh 'cf push'
     }
-    
 }
