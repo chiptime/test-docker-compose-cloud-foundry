@@ -23,4 +23,14 @@ node {
         sh "docker rmi $registry:latest"
     }
     
+    stage('Deploy to Cloud Foundry') {
+        pushToCloudFoundry(
+            target: 'https://api.cf.us10.hana.ondemand.com',
+            organization: 'e9ae66datrial',
+            cloudSpace: 'dev',
+            credentialsId: 'cf-trial-patrick',
+            manifestChoice: [manifestFile: 'path/to/manifest.yml']
+        )
+    }
+    
 }
