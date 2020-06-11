@@ -4,3 +4,4 @@ Packages/*
 docker-compose.yml
 Dockerfile
 *.xcodeproj/
+.git
