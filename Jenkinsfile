@@ -1,11 +1,11 @@
 node {
     env.AWS_ECR_LOGIN=true
     def newApp
-    def registry = 'docker-registry.cfapps.us10.hana.ondemand.com/test-cf'
+    def registry = '$CF_REGISTRY_URL/$CF_APP_NAME'
     def registryCredential = 'dockerhub'
 
 	stage('Git') {
-		git 'https://github.com/chiptime/test-docker-compose-cloud-foundry'
+		git '$GIT_URL'
 	}
 	stage('Building image') {
         docker.withRegistry( 'https://' + registry, '' ) {
@@ -23,7 +23,7 @@ node {
         sh "docker rmi $registry:latest"
     }
     
-    stage ('Dev_Deployment') {
+    stage ('Deploy to Cloud Foundry') {
         sh 'pwd'
         sh 'cf login -a $CF_API_ENDPOINT -u $CF_CREDENTIALS_USER -p $CF_CREDENTIALS_PASSWORD'
         sh 'cf push'
