@@ -1,7 +1,7 @@
 pipeline {
   agent any
     
-  enviroment {
+  environment {
     registry = 'docker-registry.cfapps.us10.hana.ondemand.com/test-cf'
     dockerImage = ''
   }
