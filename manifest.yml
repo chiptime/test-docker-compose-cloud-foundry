@@ -1,0 +1,6 @@
+applications:
+    - name: test-node-docker
+      memory: 1G
+      timeout: 360
+      docker:
+        image: docker-registry.cfapps.us10.hana.ondemand.com/test-cf:latest
