@@ -1,35 +1,26 @@
-pipeline {
-  agent any
-  stages {
-    stage('Building image') {
-      steps {
-        script {
-          docker.build registryName + ":$BUILD_NUMBER"
+node {
+    env.AWS_ECR_LOGIN=true
+    def newApp
+    def registry = 'docker-registry.cfapps.us10.hana.ondemand.com/test-cf'
+    def registryCredential = 'dockerhub'
+	
+	stage('Git') {
+		git 'https://github.com/chiptime/test-docker-compose-cloud-foundry'
+	}
+	stage('Building image') {
+        docker.withRegistry( 'https://' + registry, '' ) {
+		    def buildName = registry + ":$BUILD_NUMBER"
+			newApp = docker.build buildName
         }
-
-      }
-    }
-
-    stage('Deploy Image') {
-      steps {
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
+	}
+	stage('Registring image') {
+        docker.withRegistry( 'https://' + registry, '' ) {
+    		newApp.push 'latest'
         }
-
-      }
-    }
-
-    stage('Remove Unused docker image') {
-      steps {
+	}
+    stage('Removing image') {
         sh "docker rmi $registry:$BUILD_NUMBER"
-      }
+        sh "docker rmi $registry:latest"
     }
-
-  }
-  environment {
-    registry = 'docker-registry.cfapps.us10.hana.ondemand.com/test-cf'
-    dockerImage = ''
-  }
+    
 }
